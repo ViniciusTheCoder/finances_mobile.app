@@ -2,7 +2,8 @@ import styled from "styled-components/native";
 import { FlatList, FlatListProps } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { Feather } from '@expo/vector-icons';
-import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper'
+import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper';
+import { TouchableOpacity } from 'react-native';
 
 import { DataListProps } from ".";
 
@@ -55,6 +56,10 @@ color: ${({ theme }) => theme.colors.shape};
 font-size: ${RFValue(18)}px;
 font-family: ${({ theme }) => theme.fonts.bold};
 `;
+
+export const LogoutButton = styled(TouchableOpacity).attrs({
+        activeOpacity: 0.5
+})``;
 
 export const Icon = styled(Feather)`
 color: ${({ theme }) => theme.colors.secondary};
