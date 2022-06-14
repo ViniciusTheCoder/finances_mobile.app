@@ -24,3 +24,12 @@ font-size: ${RFValue(18)}px;
 font-family: ${({ theme }) => theme.fonts.regular};
 
 `;
+
+export const Content = styled.ScrollView.attrs({
+    contentContainerStyle: { flex: 1, padding: 24 }
+})``;
+
+export const ChartContainer = styled.View`
+width: 100%;
+align-items: center;
+`;
