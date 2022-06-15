@@ -17,6 +17,9 @@ This mobile app was developed as part of Ignite Rocketsteat React-Native trail.
 <table> 
   <td>React-Native</td>
   <td>Typescript</td>
+  <td>Victory</td>
+  <td>Yup</td>
+  <td>React Hook-Form</td>
 </table>
 
 ## How to run🏃‍♂️:
