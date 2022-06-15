@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VictoryPie } from "victory-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { addMonths, subMonths } from "date-fns";
+
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 import { HistoryCard } from "../../components/HistoryCard";
 
@@ -10,7 +13,11 @@ import {
     Header,
     Title,
     Content,
-    ChartContainer
+    ChartContainer,
+    Month,
+    MonthSelect,
+    MonthSelectButton,
+    MonthSelectIcon
 } from "./styles";
 
 import { categories } from "../../utils/categories";
@@ -35,7 +42,16 @@ interface CategoryData {
 
 export function Resume() {
 
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
+
+    function handleDateChange(action: 'next' | 'prev') {
+        if (action === 'next') {
+            setSelectedDate(addMonths(selectedDate, 1));
+        } else {
+            setSelectedDate(subMonths(selectedDate, 1));
+        }
+    }
 
     async function loadData() {
         const dataKey = '@gofinances: transactions';
@@ -95,7 +111,25 @@ export function Resume() {
                 <Title>Resumo por categoria</Title>
             </Header>
 
-            <Content>
+            <Content
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                    paddingHorizontal: 24,
+                    paddingBottom: useBottomTabBarHeight(),
+                }}
+            >
+
+                <MonthSelect>
+                    <MonthSelectButton onPress={() => handleDateChange('prev')}>
+                        <MonthSelectIcon name="chevron-left" />
+                    </MonthSelectButton>
+
+                    <Month>Junho</Month>
+
+                    <MonthSelectButton onPress={() => handleDateChange('next')}>
+                        <MonthSelectIcon name="chevron-right" />
+                    </MonthSelectButton >
+                </MonthSelect>
 
                 <ChartContainer>
 
