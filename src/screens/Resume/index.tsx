@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VictoryPie } from "victory-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { addMonths, subMonths } from "date-fns";
+import { addMonths, subMonths, format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
 
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
@@ -51,6 +53,7 @@ export function Resume() {
         } else {
             setSelectedDate(subMonths(selectedDate, 1));
         }
+
     }
 
     async function loadData() {
@@ -59,7 +62,11 @@ export function Resume() {
         const responseFormatted = response ? JSON.parse(response) : [];
 
         const expansives = responseFormatted
-            .filter((expansive: TransactionData) => expansive.type === 'negative');
+            .filter((expansive: TransactionData) =>
+                expansive.type === 'negative' &&
+                new Date(expansive.date).getMonth() === selectedDate.getMonth() &&
+                new Date(expansive.date).getFullYear() === selectedDate.getFullYear()
+            );
 
         const expansivesTotal = expansives
             .reduce((acumullator: number, expansive: TransactionData) => {
@@ -102,10 +109,11 @@ export function Resume() {
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [selectedDate]);
 
 
     return (
+
         <Container>
             <Header>
                 <Title>Resumo por categoria</Title>
@@ -120,11 +128,15 @@ export function Resume() {
             >
 
                 <MonthSelect>
+
                     <MonthSelectButton onPress={() => handleDateChange('prev')}>
                         <MonthSelectIcon name="chevron-left" />
                     </MonthSelectButton>
 
-                    <Month>Junho</Month>
+
+                    <Month>
+                        {format(selectedDate, 'MMMM, yyy', { locale: ptBR })}
+                    </Month>
 
                     <MonthSelectButton onPress={() => handleDateChange('next')}>
                         <MonthSelectIcon name="chevron-right" />
@@ -165,3 +177,4 @@ export function Resume() {
         </Container>
     )
 }
+
