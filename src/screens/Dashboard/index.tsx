@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from '@react-navigation/native'
@@ -15,7 +15,7 @@ import {
     User,
     UserGreetings,
     UserProfile,
-    LogoutButton,
+    LogoutButon,
     Icon,
     HighlightCards,
     Transactions,
@@ -174,9 +174,9 @@ export function Dashboard() {
                                     <UserProfile>Vinícius</UserProfile>
                                 </User>
                             </UserInfo>
-                            <LogoutButton onPress={() => { }}>
+                            <LogoutButon onPress={() => { }}>
                                 <Icon name='power' />
-                            </LogoutButton>
+                            </LogoutButon>
                         </UserWrapper>
                     </Header>
                     <HighlightCards>

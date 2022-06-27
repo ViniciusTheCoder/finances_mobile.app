@@ -6,6 +6,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ThemeProvider } from 'styled-components';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import { Routes } from './src/routes'
+
 import {
   useFonts,
   Poppins_400Regular,
@@ -13,7 +15,7 @@ import {
   Poppins_700Bold
 } from '@expo-google-fonts/poppins';
 
-import { NavigationContainer } from '@react-navigation/native';
+
 
 import theme, { } from './src/global/styles/theme';
 
@@ -42,17 +44,14 @@ export default function App() {
 
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor="transparent"
-            translucent />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent />
 
-          <AuthProvider>
-            <SignIn />
-          </AuthProvider>
-
-        </NavigationContainer>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   )
