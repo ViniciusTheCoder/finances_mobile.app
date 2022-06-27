@@ -1,6 +1,14 @@
-import React, { createContext, ReactNode, useContext } from "react";
+import React, {
+    createContext,
+    ReactNode,
+    useContext,
+    useState
+} from "react";
 
 import * as AuthSession from 'expo-auth-session';
+
+const { CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
 
 interface AuthProviderprops {
     children: ReactNode;
@@ -18,27 +26,39 @@ interface AuthContextData {
     signInGoogle(): Promise<void>
 }
 
+interface AuthorizationResponse {
+    params: {
+        acess_token: string;
+    },
+    type: string;
+}
+
 const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderprops) {
-    const user = {
-        id: '1234567',
-        name: 'Vinícius',
-        email: 'vinícius@email.com',
-    };
-
+    const [user, setUser] = useState<User>({} as User);
 
     async function signInGoogle() {
         try {
-            const CLIENT_ID = '988795451486-rsit7ud843r59a88o7l9q825160gm26c.apps.googleusercontent.com';
-            const REDIRECT_URI = 'https://auth.expo.io/@viniciusthecoder/gofinances';
             const RESPONSE_TYPE = 'token';
             const SCOPE = encodeURI('profile email');
 
-            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope${SCOPE}`;
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
 
-            const response = await AuthSession.startAsync({ authUrl });
-            console.log(response)
+            const { type, params } = await AuthSession
+                .startAsync({ authUrl }) as AuthorizationResponse;
+
+            if (type === 'sucess') {
+                const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.acess_token}`)
+                const userInfo = await response.json();
+
+                setUser({
+                    id: userInfo.id,
+                    email: userInfo.email,
+                    name: userInfo.given_name,
+                    photo: userInfo.picture
+                });
+            }
 
         } catch (error) {
             throw new Error(error);
