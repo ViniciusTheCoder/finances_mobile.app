@@ -28,11 +28,13 @@ interface AuthContextData {
     user: User;
     signInGoogle(): Promise<void>;
     signInApple(): Promise<void>;
+    signOut(): Promise<void>;
+    userStorageLoading: boolean;
 }
 
 interface AuthorizationResponse {
     params: {
-        acess_token: string;
+        access_token: string;
     },
     type: string;
 }
@@ -55,8 +57,8 @@ function AuthProvider({ children }: AuthProviderprops) {
             const { type, params } = await AuthSession
                 .startAsync({ authUrl }) as AuthorizationResponse;
 
-            if (type === 'sucess') {
-                const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.acess_token}`)
+            if (type === 'success') {
+                const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`)
                 const userInfo = await response.json();
 
                 const userLoggedIn = {
@@ -86,10 +88,12 @@ function AuthProvider({ children }: AuthProviderprops) {
             });
 
             if (credential) {
+                const name = credential.fullName!.givenName!;
                 const userLogged = {
                     id: String(credential.user),
                     email: credential.email,
-                    name: credential.fullName!.givenName!,
+                    name,
+                    photo: `https://ui-avatars.com/api/?name=${name}&length=1`
                 };
 
                 setUser(userLogged)
@@ -100,6 +104,11 @@ function AuthProvider({ children }: AuthProviderprops) {
         } catch (error) {
             throw new Error(error);
         }
+    }
+
+    async function signOut() {
+        setUser({} as User);
+        await AsyncStorage.removeItem(userStorageKey);
     }
 
     useEffect(() => {
@@ -121,7 +130,10 @@ function AuthProvider({ children }: AuthProviderprops) {
         <AuthContext.Provider value={{
             user,
             signInGoogle,
-            signInApple
+            signInApple,
+            signOut,
+            userStorageLoading
+
         }}>
             {children}
         </AuthContext.Provider>
