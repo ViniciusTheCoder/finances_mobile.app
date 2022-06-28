@@ -32,7 +32,7 @@ This mobile app was developed as part of Ignite Rocketsteat React-Native trail.
 - Yard/npm expo;
 - Yarn/npm android to see the app at your emulator, it's avaiable both for iOs🍎 and Android🤖.
 
-## How it looks
+## How it looks:
 
 <div style="display: inline_block">
 
