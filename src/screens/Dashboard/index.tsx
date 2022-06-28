@@ -53,9 +53,14 @@ export function Dashboard() {
         collection: DataListProps[],
         type: 'positive' | 'negative') {
 
+        const collectionFiltered = collection
+            .filter(transaction => transaction.type === type);
+
+        if (collectionFiltered.length === 0)
+            return 0;
+
         const lastTransaction = new Date(
-            Math.max.apply(Math, collection
-                .filter((transaction: DataListProps) => transaction.type === type)
+            Math.max.apply(Math, collectionFiltered
                 .map((transaction) => new Date(transaction.date).getTime())));
 
         return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', {
@@ -68,7 +73,7 @@ export function Dashboard() {
 
     async function loadTransactions() {
 
-        const dataKey = '@gofinances: transactions';
+        const dataKey = `@gofinances: transactions_user:${user.id}`;
         const response = await AsyncStorage.getItem(dataKey);
         const transactions = response ? JSON.parse(response) : [];
 
@@ -111,7 +116,9 @@ export function Dashboard() {
 
         const lastTransactionEntries = getLastTransactionDate(transactions, 'positive');
         const lastTransactionExpansives = getLastTransactionDate(transactions, 'negative');
-        const totalInterval = `01 a ${lastTransactionExpansives}`;
+        const totalInterval = lastTransactionExpansives === 0 ?
+            'Não há transações'
+            : `01 a ${lastTransactionExpansives}`;
 
 
         const total = entriesTotal - expansiveTotal;
@@ -123,7 +130,9 @@ export function Dashboard() {
                     currency: 'BRL'
                 }),
 
-                lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
+                lastTransaction: lastTransactionEntries === 0 ?
+                    'Não há transações'
+                    : `Última entrada dia ${lastTransactionEntries}`,
             },
             expansives: {
                 amount: expansiveTotal.toLocaleString('pt-BR', {
@@ -131,7 +140,9 @@ export function Dashboard() {
                     currency: 'BRL'
                 }),
 
-                lastTransaction: `Última saída dia ${lastTransactionExpansives}`,
+                lastTransaction: lastTransactionExpansives === 0 ?
+                    'Não há transações'
+                    : `Última saída dia ${lastTransactionExpansives}`,
             },
 
             total: {

@@ -3,7 +3,8 @@ import {
     Modal,
     TouchableWithoutFeedback,
     Keyboard,
-    Alert
+    Alert,
+    useWindowDimensions
 } from "react-native";
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import uuid from 'react-native-uuid';
-
+import { useAuth } from "../../hooks/auth";
 import { InputForm } from "../../components/Form/InputForm";
 import { Button } from "../../components/Form/Button";
 import { TransactionTypeButton } from "../../components/Form/TransactionTypeButton";
@@ -27,6 +28,7 @@ import {
     Fields,
     TransactionsTypes
 } from './styles';
+
 
 type NavigationProps = {
     navigate: (screen: string) => void;
@@ -53,6 +55,8 @@ const schema = Yup.object().shape({
 export function Register() {
     const [transactionType, setTransactionType] = useState('');
     const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+
+    const { user } = useAuth();
 
     const [category, setCategory] = useState({
         key: 'category',
@@ -104,7 +108,7 @@ export function Register() {
         }
 
         try {
-            const dataKey = '@gofinances: transactions';
+            const dataKey = `@gofinances: transactions_user:${user.id}`;
             const data = await AsyncStorage.getItem(dataKey);
             const currentData = data ? JSON.parse(data) : [];
 
