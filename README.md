@@ -4,7 +4,7 @@
 
 This mobile app was developed as part of Ignite Rocketsteat React-Native trail. 
 
-## I'm still workin' on his functions, but the goal is that he be able to:
+## App functions:
 
  - Show ur financial movement;
  - Show graphics comparing ur spendings;
