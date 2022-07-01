@@ -25,6 +25,12 @@ import { SignIn } from './src/screens/SignIn';
 
 import { AuthProvider, useAuth } from './src/hooks/auth';
 
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  "EventEmitter.removeListener('url', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`."
+])
+
 export default function App() {
 
   SplashScreen.preventAutoHideAsync();
