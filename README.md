@@ -4,6 +4,8 @@
 
 This mobile app was developed as part of Ignite Rocketsteat React-Native trail. 
 
+### I'm currently doin' some tests with Jest in this app
+
 ## App functions:
 
  - Show ur financial movement;
